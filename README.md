@@ -13,7 +13,8 @@ In `kicad/MJ3235-66-0` directory you should put a 3D model of the RJ12 connector
 - [RJ12 connector](https://www.tme.eu/pl/details/mj3235-66-0/zlacza-rj/gct/)
 - Electrolytic capacitors 100uF, 10uF, 1uF
 - Ceramic capacitor 100nF
-- Resistors 100Ohm, 200Ohm
+- Resistors 56Ω, 100Ω, 200Ω
+- Amber LED 3mm
 - Optocoupler 4N35
 - 2x 1x7 header socket (for connecting to ESP, chip facing down, USB to the edge of PCB)
 

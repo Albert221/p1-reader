@@ -3,7 +3,7 @@ substitutions:
   friendly_name: P1 Reader
 
 esphome:
-  name: ${device_name}s
+  name: ${device_name}
   friendly_name: ${friendly_name}
 
 esp32:
@@ -43,6 +43,9 @@ dsmr:
   crc_check: false
   request_pin: GPIO4
   max_telegram_length: 1700
+
+status_led:
+  pin: GPIO3
 
 sensors:
   - platform: wifi_signal
