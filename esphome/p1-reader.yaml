@@ -10,7 +10,7 @@ esp32:
   board: seeed_xiao_esp32c3
   variant: esp32c3
   framework:
-    type: esp-idf
+    type: arduino # DSMR component is Arduino only
 
 api:
 
@@ -47,7 +47,7 @@ dsmr:
 status_led:
   pin: GPIO3
 
-sensors:
+sensor:
   - platform: wifi_signal
     id: sensor_wifi_signal
     name: "${friendly_name} WiFi Signal"
