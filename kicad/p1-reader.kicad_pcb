@@ -90,7 +90,7 @@
 	(net 10 "unconnected-(J2-Pin_4-Pad4)")
 	(net 11 "unconnected-(J2-Pin_5-Pad5)")
 	(net 12 "unconnected-(J3-Pin_4-Pad4)")
-	(net 13 "unconnected-(J3-Pin_5-Pad5)")
+	(net 13 "+3V3")
 	(net 14 "unconnected-(J3-Pin_3-Pad3)")
 	(net 15 "unconnected-(J3-Pin_2-Pad2)")
 	(net 16 "Net-(R1-Pad1)")
@@ -2277,7 +2277,7 @@
 				)
 			)
 		)
-		(property "Value" "Status"
+		(property "Value" "Status LED"
 			(at -1.46 0 180)
 			(layer "F.Fab")
 			(uuid "c4aaef57-70b4-49f5-a05a-4603f47c136e")
@@ -6836,9 +6836,9 @@
 			(drill 1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net 13 "unconnected-(J3-Pin_5-Pad5)")
+			(net 13 "+3V3")
 			(pinfunction "Pin_5")
-			(pintype "passive+no_connect")
+			(pintype "passive")
 			(uuid "9003c82c-244e-469f-b70a-ebe4f8e2210c")
 		)
 		(pad "6" thru_hole circle

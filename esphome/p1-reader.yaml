@@ -10,12 +10,23 @@ esp32:
   board: seeed_xiao_esp32c3
   variant: esp32c3
   framework:
-    type: arduino # DSMR component is Arduino only
+    type: esp-idf
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/Albert221/dsmr-custom.git
+      ref: BAJO_STOEN
+    components: [ dsmr_custom ]
 
 api:
 
 ota:
   - platform: esphome
+
+logger:
+  baud_rate: 0
+  level: INFO
 
 wifi:
   ssid: !secret wifi_ssid
@@ -36,13 +47,40 @@ uart:
   data_bits: 8
   parity: NONE
   stop_bits: 1
-  rx_buffer_size: 1700
+  rx_buffer_size: 4096
+  # debug:
 
-dsmr:
+dsmr_custom:
+  id: dsmr_hub
   uart_id: uart_dsmr
+  decryption_key: !secret p1_decryption_key
+  method: Poland_STOEN
+  max_telegram_length: 4096
   crc_check: false
-  request_pin: GPIO4
-  max_telegram_length: 1700
+
+  custom_obis_sensors:
+    - code: "0-0:1.0.0"  
+      name: "1.0.0 Timestamp"
+      type: text_sensor      
+      internal: false
+
+    - code: "1-0:1.8.0"
+      name: "1.8.0 Positive active energy total"
+      type: sensor
+      internal: false
+      unit_of_measurement: "kWh"
+      accuracy_decimals: 3
+      device_class: energy
+      state_class: total_increasing
+
+    - code: "1-0:1.7.0"  
+      name: "1.7.0 Positive active instantaneous power"
+      type: sensor
+      internal: false
+      unit_of_measurement: "kW"
+      accuracy_decimals: 3
+      device_class: power
+      state_class: measurement
 
 status_led:
   pin: GPIO3
@@ -50,83 +88,23 @@ status_led:
 sensor:
   - platform: wifi_signal
     id: sensor_wifi_signal
-    name: "${friendly_name} WiFi Signal"
+    name: "${friendly_name} WiFi signal"
     update_interval: 300s
 
-  - platform: dsmr
-    energy_delivered_tariff1:
-      id: dsmr_electricity_delivered_1
-      name: "Energy Consumed Tariff 1"
-      state_class: total_increasing
-    energy_returned_tariff1:
-      id: dsmr_electricity_returned_1
-      name: "Energy Produced Tariff 1"
-      state_class: total_increasing
-    energy_delivered_tariff2:
-      id: dsmr_electricity_delivered_2
-      name: "Energy Consumed Tariff 2"
-      state_class: total_increasing
-    energy_returned_tariff2:
-      id: dsmr_electricity_returned_2
-      name: "Energy Produced Tariff 2"
-      state_class: total_increasing
-    power_delivered:
-      id: dsmr_electricity_currently_delivered
-      name: "Power Consumed"
-      accuracy_decimals: 3
-    power_returned:
-      id: dsmr_electricity_currently_returned
-      name: "Power Produced"
-      accuracy_decimals: 3
-    voltage_l1:
-      id: dsmr_phase_voltage_l1
-      name: "Voltage Phase 1"
-    voltage_l2:
-      id: dsmr_phase_voltage_l2
-      name: "Voltage Phase 2"
-    voltage_l3:
-      id: dsmr_phase_voltage_l3
-      name: "Voltage Phase 3"
-    current_l1:
-      id: dsmr_phase_power_current_l1
-      name: "Current Phase 1"
-    current_l2:
-      id: dsmr_phase_power_current_l2
-      name: "Current Phase 2"
-    current_l3:
-      id: dsmr_phase_power_current_l3
-      name: "Current Phase 3"
-    power_delivered_l1:
-      id: dsmr_phase_currently_delivered_l1
-      name: "Power Consumed Phase 1"
-      accuracy_decimals: 3
-    power_delivered_l2:
-      id: dsmr_phase_currently_delivered_l2
-      name: "Power Consumed Phase 2"
-      accuracy_decimals: 3
-    power_delivered_l3:
-      id: dsmr_phase_currently_delivered_l3
-      name: "Power Consumed Phase 3"
-      accuracy_decimals: 3
-    power_returned_l1:
-      id: dsmr_phase_currently_returned_l1
-      name: "Power Produced Phase 1"
-      accuracy_decimals: 3
-    power_returned_l2:
-      id: dsmr_phase_currently_returned_l2
-      name: "Power Produced Phase 2"
-      accuracy_decimals: 3
-    power_returned_l3:
-      id: dsmr_phase_currently_returned_l3
-      name: "Power Produced Phase 3"
-      accuracy_decimals: 3
+# text_sensor:
+#   - platform: homeassistant
+#     internal: True
+#     id: p1_dongle_1_0_0_eon_timestamp
+#     entity_id: sensor.p1_dongle_1_0_0_eon_timestamp
+  # - platform: dsmr_custom
+  #   dsmr_custom_hub_id: dsmr_hub
 
-text_sensor:
-  - platform: dsmr
-    identification:
-      name: "${friendly_name} DSMR Identification"
-    p1_version:
-      name: "${friendly_name} DSMR Version"
-    timestamp:
-      id: dsmr_timestamp
-      internal: true
+  #   # This confirms a connection, but the magic happens below.
+  #   identification:
+  #     name: "P1 Telegram Header"
+
+  #   # This captures the full telegram internally and uses a lightweight
+  #   # trigger to print it to the logs without crashing the device.
+  #   telegram:
+  #     name: "P1 Telegram"
+  #     internal: false
